@@ -13,8 +13,12 @@ const app = Fastify({
   logger: process.env.NODE_ENV !== 'test',
 });
 
-// CORS — permite requests desde cualquier origen en desarrollo
-await app.register(cors, { origin: true });
+// CORS — permite todos los orígenes y métodos
+await app.register(cors, {
+  origin: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'x-admin-key'],
+});
 
 // Error handler global
 app.setErrorHandler(errorHandler);
