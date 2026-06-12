@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Service {
+  id           String         @id @default(uuid())
+  name         String
+  description  String?
+  duration     Int            // duración en minutos
+  isActive     Boolean        @default(true)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  availability Availability[]
+  appointments Appointment[]
+
+  @@map("services")
+}
+
+model Availability {
+  id        String  @id @default(uuid())
+  serviceId String
+  dayOfWeek Int     // 0 = domingo, 6 = sábado
+  startTime String  // formato "HH:MM"
+  endTime   String  // formato "HH:MM"
+
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@map("availability")
+}
+
+model Appointment {
+  id          String            @id @default(uuid())
+  serviceId   String
+  clientName  String
+  clientEmail String
+  clientPhone String
+  date        DateTime          @db.Date
+  startTime   String            // formato "HH:MM"
+  endTime     String            // formato "HH:MM"
+  status      AppointmentStatus @default(PENDING)
+  notes       String?
+  createdAt   DateTime          @default(now())
+
+  service     Service @relation(fields: [serviceId], references: [id])
+
+  @@map("appointments")
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
