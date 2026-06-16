@@ -87,15 +87,15 @@
     }
 
     /* ═══════════════════════════════════════════════════════════
-       FADE-IN POR SCROLL (IntersectionObserver)
+       FADE-IN POR SCROLL (progressive enhancement — visible sin JS)
     ═══════════════════════════════════════════════════════════ */
-    .fi        { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
-    .fi-l      { opacity: 0; transform: translateX(-32px); transition: opacity .7s ease, transform .7s ease; }
-    .fi-r      { opacity: 0; transform: translateX(32px);  transition: opacity .7s ease, transform .7s ease; }
-    .fi.on, .fi-l.on, .fi-r.on { opacity: 1; transform: none; }
+    html.js .fi        { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
+    html.js .fi-l      { opacity: 0; transform: translateX(-32px); transition: opacity .7s ease, transform .7s ease; }
+    html.js .fi-r      { opacity: 0; transform: translateX(32px);  transition: opacity .7s ease, transform .7s ease; }
+    html.js .fi.on, html.js .fi-l.on, html.js .fi-r.on { opacity: 1; transform: none; }
 
     @media (prefers-reduced-motion: reduce) {
-      .fi, .fi-l, .fi-r { opacity: 1; transform: none; transition: none; }
+      html.js .fi, html.js .fi-l, html.js .fi-r { opacity: 1; transform: none; transition: none; }
       * { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
     }
 
@@ -1459,6 +1459,9 @@
   ═══════════════════════════════════════════════════════════ -->
   <script>
     'use strict';
+
+    /* ── Activar animaciones (progressive enhancement) ── */
+    document.documentElement.classList.add('js');
 
     /* ── Navbar: scroll → fondo sólido ── */
     const navbar = document.getElementById('navbar');
