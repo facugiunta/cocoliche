@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="El Antojo — Bodegón porteño en Villa del Parque, CABA. Premio Mejor Milanesa de Bodegón de Buenos Aires 2017. Milanesas XL gigantes, pastas, carnes y más.">
+  <meta property="og:title" content="El Antojo — La Mejor Milanesa de Buenos Aires">
+  <meta property="og:description" content="Bodegón porteño desde 1998. Premio Mejor Milanesa de Bodegón CABA 2017. Tinogasta 3174, Villa del Parque.">
+  <title>El Antojo — La Mejor Milanesa de Buenos Aires</title>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       GOOGLE FONTS
+  ═══════════════════════════════════════════════════════════ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,700&family=Lato:wght@300;400;700&family=Pacifico&display=swap" rel="stylesheet">
+
+  <style>
+    /* ═══════════════════════════════════════════════════════════
+       CSS CUSTOM PROPERTIES
+    ═══════════════════════════════════════════════════════════ */
+    :root {
+      --rojo:    #C0392B;
+      --crema:   #F5E6C8;
+      --marron:  #7B4A1E;
+      --verde:   #2E7D32;
+      --amarillo:#D4A017;
+      --negro:   #1A1A1A;
+      --blanco:  #FAF7F2;
+
+      --f-display: 'Playfair Display', serif;
+      --f-body:    'Lato', sans-serif;
+      --f-accent:  'Pacifico', cursive;
+
+      --max-w:  1200px;
+      --pad-v:  clamp(3rem, 6vw, 6rem);
+      --radius: 14px;
+      --sh-sm:  0 2px 10px rgba(0,0,0,.08);
+      --sh-md:  0 6px 24px rgba(0,0,0,.15);
+      --sh-lg:  0 12px 48px rgba(0,0,0,.22);
+      --ease:   .3s ease;
+
+      /* Breadcrumb SVG texture (pan rallado) — used in separators & hero overlay */
+      --tex-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='50'%3E%3Ccircle cx='6' cy='12' r='4.5' fill='%23D4A017' opacity='0.32'/%3E%3Ccircle cx='20' cy='38' r='3' fill='%237B4A1E' opacity='0.28'/%3E%3Ccircle cx='36' cy='8' r='6' fill='%23C0392B' opacity='0.18'/%3E%3Ccircle cx='50' cy='28' r='3.5' fill='%23D4A017' opacity='0.38'/%3E%3Ccircle cx='65' cy='14' r='4' fill='%237B4A1E' opacity='0.24'/%3E%3Ccircle cx='79' cy='40' r='5' fill='%23D4A017' opacity='0.30'/%3E%3Ccircle cx='92' cy='10' r='3' fill='%23C0392B' opacity='0.16'/%3E%3Ccircle cx='14' cy='47' r='2.5' fill='%237B4A1E' opacity='0.2'/%3E%3Ccircle cx='44' cy='44' r='4' fill='%23D4A017' opacity='0.22'/%3E%3Ccircle cx='72' cy='4' r='3' fill='%23C0392B' opacity='0.15'/%3E%3C/svg%3E");
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       RESET & BASE
+    ═══════════════════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--f-body);
+      color: var(--negro);
+      background: var(--blanco);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    ul { list-style: none; }
+    button { font-family: inherit; }
+
+    .container {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       KEYFRAME ANIMATIONS
+    ═══════════════════════════════════════════════════════════ */
+    @keyframes pulso-brillo {
+      0%   { box-shadow: 0 0 0 0 rgba(212,160,23,.75), 0 0 16px rgba(212,160,23,.3); }
+      60%  { box-shadow: 0 0 0 18px rgba(212,160,23,0), 0 0 32px rgba(212,160,23,.5); }
+      100% { box-shadow: 0 0 0 0 rgba(212,160,23,0),  0 0 16px rgba(212,160,23,.3); }
+    }
+
+    @keyframes rebote {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(9px); }
+    }
+
+    @keyframes entrar-hero {
+      from { opacity: 0; transform: translateY(45px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       FADE-IN POR SCROLL (IntersectionObserver)
+    ═══════════════════════════════════════════════════════════ */
+    .fi        { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
+    .fi-l      { opacity: 0; transform: translateX(-32px); transition: opacity .7s ease, transform .7s ease; }
+    .fi-r      { opacity: 0; transform: translateX(32px);  transition: opacity .7s ease, transform .7s ease; }
+    .fi.on, .fi-l.on, .fi-r.on { opacity: 1; transform: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fi, .fi-l, .fi-r { opacity: 1; transform: none; transition: none; }
+      * { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       BREADCRUMB TEXTURE SEPARATORS
+    ═══════════════════════════════════════════════════════════ */
+    .tex-sep {
+      height: 56px;
+      background-color: var(--crema);
+      background-image: var(--tex-svg);
+      background-repeat: repeat-x;
+      background-size: 100px 56px;
+    }
+    .tex-sep.inv {
+      background-color: var(--negro);
+      filter: brightness(1.8);
+    }
+    .tex-sep.red {
+      background-color: var(--rojo);
+      filter: hue-rotate(0deg) brightness(1.2);
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       SECTION COMMONS
+    ═══════════════════════════════════════════════════════════ */
+    section { padding: var(--pad-v) 0; }
+
+    .sec-label {
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--marron);
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      margin-bottom: .8rem;
+    }
+    .sec-label::before, .sec-label::after {
+      content: ''; flex: 1; height: 1px;
+      background: currentColor; opacity: .3;
+    }
+    .sec-label.left::before { display: none; }
+
+    .sec-title {
+      font-family: var(--f-display);
+      font-size: clamp(1.9rem, 4vw, 3rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       NAVBAR
+    ═══════════════════════════════════════════════════════════ */
+    #navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: transparent;
+      transition: background var(--ease), box-shadow var(--ease);
+    }
+    #navbar.scrolled {
+      background: var(--rojo);
+      box-shadow: 0 2px 24px rgba(0,0,0,.35);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .9rem 1.5rem;
+      max-width: var(--max-w); margin: 0 auto;
+    }
+    .nav-logo {
+      font-family: var(--f-accent);
+      font-size: 1.75rem;
+      color: var(--crema);
+      letter-spacing: .02em;
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: .15rem;
+    }
+    .nav-links a {
+      color: var(--crema);
+      font-weight: 700; font-size: .82rem;
+      text-transform: uppercase; letter-spacing: .05em;
+      padding: .4rem .7rem; border-radius: 6px;
+      transition: background var(--ease), color var(--ease);
+    }
+    .nav-links a:hover {
+      background: rgba(255,255,255,.14);
+      color: var(--amarillo);
+    }
+    .nav-ig {
+      display: flex; align-items: center; gap: .35rem;
+    }
+    .nav-ig svg {
+      width: 17px; height: 17px;
+      fill: none; stroke: currentColor; stroke-width: 1.6;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+    /* Hamburger */
+    .nav-hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: .5rem;
+    }
+    .nav-hamburger span {
+      display: block; width: 24px; height: 2px;
+      background: var(--crema); border-radius: 2px;
+      transition: var(--ease);
+    }
+    @media (max-width: 900px) {
+      .nav-hamburger { display: flex; }
+      .nav-links {
+        display: none; position: fixed;
+        inset: 0; background: var(--rojo);
+        flex-direction: column; justify-content: center;
+        align-items: center; gap: 1.5rem; z-index: 999;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links a { font-size: 1.2rem; padding: .65rem 1.4rem; }
+      .nav-close {
+        position: absolute; top: 1.4rem; right: 1.4rem;
+        background: none; border: none; color: var(--crema);
+        font-size: 2.2rem; cursor: pointer; line-height: 1;
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════════════════════════ */
+    #inicio {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+      background:
+        linear-gradient(155deg, rgba(26,26,26,.88) 0%, rgba(123,74,30,.72) 45%, rgba(192,57,43,.78) 100%),
+        radial-gradient(ellipse at 25% 65%, #7B4A1E 0%, #C0392B 45%, #1A1A1A 100%);
+    }
+    /* Pan-rallado texture overlay */
+    #inicio::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='90'%3E%3Ccircle cx='10' cy='18' r='7' fill='%23D4A017' opacity='0.10'/%3E%3Ccircle cx='35' cy='65' r='5' fill='%23F5E6C8' opacity='0.07'/%3E%3Ccircle cx='60' cy='22' r='9' fill='%23D4A017' opacity='0.09'/%3E%3Ccircle cx='85' cy='72' r='6' fill='%23F5E6C8' opacity='0.08'/%3E%3Ccircle cx='108' cy='28' r='8' fill='%23D4A017' opacity='0.10'/%3E%3Ccircle cx='128' cy='75' r='5' fill='%23F5E6C8' opacity='0.06'/%3E%3Ccircle cx='22' cy='80' r='6' fill='%23D4A017' opacity='0.09'/%3E%3Ccircle cx='50' cy='82' r='4' fill='%23F5E6C8' opacity='0.07'/%3E%3Ccircle cx='96' cy='8' r='5' fill='%23D4A017' opacity='0.08'/%3E%3C/svg%3E");
+      background-repeat: repeat; background-size: 140px 90px;
+    }
+    .hero-content {
+      position: relative; z-index: 1;
+      text-align: center; padding: 7rem 1.5rem 5rem;
+      max-width: 920px;
+      animation: entrar-hero .9s ease .25s both;
+    }
+    .hero-eyebrow {
+      font-size: .82rem; font-weight: 700; letter-spacing: .22em;
+      text-transform: uppercase; color: var(--amarillo);
+      margin-bottom: 1.1rem;
+    }
+    .hero-title-row {
+      position: relative; display: inline-block;
+    }
+    .hero-title {
+      font-family: var(--f-display);
+      font-size: clamp(2.6rem, 7vw, 5.2rem);
+      font-weight: 900; color: var(--blanco); line-height: 1.08;
+    }
+    .hero-title .hl {
+      position: relative; display: inline-block;
+    }
+    .hero-title .hl::after {
+      content: ''; position: absolute; left: 0; bottom: -5px;
+      width: 100%; height: 5px;
+      background: var(--amarillo); border-radius: 3px;
+    }
+    .hero-badge {
+      position: absolute; top: 50%; right: -130px;
+      transform: translateY(-50%);
+      width: 130px; height: 130px; border-radius: 50%;
+      background: var(--amarillo); color: var(--negro);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      font-family: var(--f-display); font-weight: 700;
+      font-size: .65rem; text-align: center; line-height: 1.35;
+      padding: .8rem;
+      border: 4px solid var(--blanco);
+      animation: pulso-brillo 2.8s ease-in-out infinite;
+    }
+    .hero-badge .badge-emoji { font-size: 1.5rem; margin-bottom: .25rem; }
+    .hero-subtitle {
+      font-size: clamp(1rem, 2.4vw, 1.22rem);
+      color: rgba(245,230,200,.88); font-weight: 300;
+      margin: 1.8rem 0 2rem; letter-spacing: .025em;
+    }
+    .hero-ctas {
+      display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: .45rem;
+      padding: .9rem 2.1rem; border-radius: 50px;
+      font-weight: 700; font-size: .92rem;
+      text-transform: uppercase; letter-spacing: .08em;
+      border: 2px solid transparent;
+      cursor: pointer; transition: all var(--ease);
+    }
+    .btn-primary { background: var(--rojo); color: #fff; border-color: var(--rojo); }
+    .btn-primary:hover {
+      background: var(--amarillo); border-color: var(--amarillo);
+      color: var(--negro); transform: translateY(-2px); box-shadow: var(--sh-md);
+    }
+    .btn-outline { background: transparent; color: #fff; border-color: #fff; }
+    .btn-outline:hover {
+      background: #fff; color: var(--negro);
+      transform: translateY(-2px); box-shadow: var(--sh-md);
+    }
+    .scroll-ind {
+      position: absolute; bottom: 2rem; left: 50%;
+      transform: translateX(-50%);
+      color: rgba(245,230,200,.65); font-size: 1.8rem;
+      animation: rebote 1.9s ease-in-out infinite;
+      user-select: none;
+    }
+
+    @media (max-width: 900px) {
+      .hero-badge {
+        position: relative; top: auto; right: auto;
+        transform: none; margin: 1.8rem auto 0;
+        width: 115px; height: 115px; font-size: .6rem;
+      }
+    }
+    @media (max-width: 480px) {
+      .hero-badge { width: 100px; height: 100px; font-size: .58rem; }
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       HISTORIA
+    ═══════════════════════════════════════════════════════════ */
+    #historia { background: var(--crema); }
+
+    .historia-grid {
+      display: grid; gap: 3.5rem; align-items: center;
+    }
+    @media (min-width: 768px) {
+      .historia-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .historia-text .sec-label { color: var(--marron); }
+    .historia-text .sec-title { color: var(--negro); }
+
+    .historia-quote {
+      font-family: var(--f-display);
+      font-size: clamp(1.3rem, 2.8vw, 1.85rem);
+      font-style: italic; color: var(--marron);
+      line-height: 1.35; margin: 1.4rem 0;
+      padding-left: 1.4rem;
+      border-left: 5px solid var(--amarillo);
+    }
+    .historia-body {
+      font-size: .98rem; color: #4a4033; line-height: 1.85;
+    }
+
+    /* Timeline */
+    .timeline { margin-top: 2.2rem; position: relative; }
+    .timeline::before {
+      content: ''; position: absolute; left: 27px; top: 0; bottom: 0;
+      width: 2px; background: var(--marron); opacity: .25;
+    }
+    .tl-item {
+      display: flex; gap: 1.4rem; margin-bottom: 1.3rem; align-items: flex-start;
+    }
+    .tl-year {
+      min-width: 54px; height: 54px; border-radius: 50%;
+      background: var(--rojo); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--f-display); font-weight: 700;
+      font-size: .72rem; text-align: center; line-height: 1.25;
+      flex-shrink: 0; position: relative; z-index: 1;
+      box-shadow: 0 3px 10px rgba(192,57,43,.35);
+    }
+    .tl-event { padding-top: .8rem; font-size: .93rem; color: #4a4033; }
+    .tl-event strong { display: block; color: var(--negro); font-weight: 700; margin-bottom: .15rem; }
+
+    /* Visual side */
+    .historia-visual { position: relative; }
+    .historia-img {
+      width: 100%; aspect-ratio: 4/3;
+      background:
+        linear-gradient(135deg, rgba(192,57,43,.9) 0%, rgba(123,74,30,.85) 55%, rgba(26,26,26,.9) 100%),
+        radial-gradient(ellipse at 40% 40%, #D4A017 0%, transparent 60%);
+      border-radius: var(--radius); overflow: hidden;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      position: relative; box-shadow: var(--sh-lg);
+    }
+    .historia-img::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: var(--tex-svg);
+      background-repeat: repeat; background-size: 100px 50px;
+      opacity: .7; pointer-events: none;
+    }
+    .historia-img-text {
+      position: relative; z-index: 1; text-align: center;
+      font-family: var(--f-accent); font-size: clamp(2rem, 4vw, 3rem);
+      color: #fff; text-shadow: 2px 4px 12px rgba(0,0,0,.6);
+    }
+    .historia-img-sub {
+      font-family: var(--f-body); font-size: .88rem;
+      color: rgba(255,255,255,.82); margin-top: .5rem; font-style: italic;
+    }
+    .historia-award {
+      position: absolute; bottom: -22px; right: -18px;
+      width: 105px; height: 105px; border-radius: 50%;
+      background: var(--amarillo); color: var(--negro);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      font-family: var(--f-display); font-weight: 700;
+      font-size: .62rem; text-align: center; line-height: 1.35;
+      padding: .7rem; border: 4px solid var(--blanco);
+      box-shadow: var(--sh-md);
+    }
+    @media (max-width: 480px) {
+      .historia-award { width: 85px; height: 85px; font-size: .56rem; bottom: -15px; right: -8px; }
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       MENÚ
+    ═══════════════════════════════════════════════════════════ */
+    #menu { background: var(--blanco); }
+    #menu .sec-label, #menu .sec-title { text-align: center; }
+    #menu .sec-label { justify-content: center; }
+
+    .tabs-nav {
+      display: flex; flex-wrap: wrap; gap: .5rem;
+      justify-content: center; margin: 2rem 0 2.5rem;
+    }
+    .tab-btn {
+      padding: .58rem 1.4rem; border-radius: 50px;
+      border: 2px solid var(--marron);
+      background: transparent; color: var(--marron);
+      font-weight: 700; font-size: .82rem;
+      text-transform: uppercase; letter-spacing: .06em;
+      cursor: pointer; transition: all var(--ease);
+    }
+    .tab-btn:hover, .tab-btn.active {
+      background: var(--rojo); border-color: var(--rojo); color: #fff;
+    }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    .menu-xl-note {
+      display: flex; gap: 1.1rem; align-items: flex-start;
+      background: linear-gradient(135deg, var(--crema), #fff5e6);
+      border: 2px solid var(--amarillo); border-radius: var(--radius);
+      padding: 1.4rem; margin-bottom: 1.8rem;
+    }
+    .menu-xl-icon { font-size: 2.8rem; flex-shrink: 0; }
+    .menu-xl-note h3 {
+      font-family: var(--f-display); font-size: 1.1rem;
+      color: var(--marron); margin-bottom: .3rem;
+    }
+    .menu-xl-note p { font-size: .9rem; color: #5a4030; line-height: 1.55; }
+    .chip {
+      display: inline-block; font-size: .68rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .06em;
+      padding: .2rem .65rem; border-radius: 20px; margin-top: .5rem;
+    }
+    .chip-tacc { background: var(--verde); color: #fff; }
+    .chip-dest { background: var(--rojo); color: #fff; }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 1.1rem;
+    }
+    .menu-card {
+      background: #fff; border: 2px solid transparent;
+      border-radius: var(--radius); padding: 1.2rem;
+      box-shadow: var(--sh-sm); transition: all var(--ease);
+    }
+    .menu-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 32px rgba(0,0,0,.12);
+      border-color: var(--amarillo);
+    }
+    .menu-card-name {
+      font-family: var(--f-display); font-size: 1.05rem;
+      font-weight: 700; color: var(--negro); margin-bottom: .35rem;
+    }
+    .menu-card-desc { font-size: .85rem; color: #666; line-height: 1.55; }
+
+    .menu-footer-note {
+      text-align: center; font-size: .85rem; color: #999;
+      margin-top: 2.2rem; padding-top: 1.4rem;
+      border-top: 1px solid rgba(0,0,0,.09);
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       RESERVAS
+    ═══════════════════════════════════════════════════════════ */
+    #reservas { background: var(--negro); color: var(--blanco); }
+
+    .reservas-grid { display: grid; gap: 3rem; }
+    @media (min-width: 768px) {
+      .reservas-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .reservas-info .sec-label { color: var(--amarillo); justify-content: flex-start; }
+    .reservas-info .sec-label::before { display: none; }
+    .reservas-info .sec-label::after { background: var(--amarillo); }
+    .reservas-info .sec-title { color: var(--blanco); }
+    .reservas-info .sec-subtitle {
+      font-size: .97rem; color: rgba(245,230,200,.78); margin-bottom: 2rem;
+    }
+
+    .contact-item {
+      display: flex; align-items: flex-start; gap: .75rem;
+      margin-bottom: 1.1rem; color: rgba(245,230,200,.88);
+    }
+    .ci-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: .1rem; }
+    .ci-text strong {
+      display: block; color: var(--amarillo);
+      font-size: .76rem; text-transform: uppercase; letter-spacing: .08em; margin-bottom: .2rem;
+    }
+    .ci-text span { font-size: .93rem; }
+
+    .res-horarios {
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius); padding: 1.25rem; margin: 1.5rem 0;
+    }
+    .res-horarios h4 {
+      font-family: var(--f-display); font-size: 1rem;
+      color: var(--amarillo); margin-bottom: .85rem;
+    }
+    .h-row {
+      display: flex; justify-content: space-between;
+      padding: .38rem 0; border-bottom: 1px solid rgba(255,255,255,.07);
+      font-size: .88rem;
+    }
+    .h-row:last-child { border-bottom: none; }
+    .h-row .dia { color: rgba(245,230,200,.75); }
+    .h-row .hora { font-weight: 700; color: #fff; }
+
+    .btn-wa {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: #25D366; color: #fff;
+      padding: .85rem 1.8rem; border-radius: 50px;
+      font-weight: 700; font-size: .9rem;
+      transition: all var(--ease); margin-top: 1rem;
+    }
+    .btn-wa:hover {
+      background: #1ebe5c; transform: translateY(-2px);
+      box-shadow: 0 5px 18px rgba(37,211,102,.4);
+    }
+
+    .aviso-reservas {
+      background: var(--amarillo); color: var(--negro);
+      border-radius: var(--radius); padding: 1rem 1.3rem;
+      margin-bottom: 1.5rem; font-size: .89rem;
+      font-weight: 700; line-height: 1.55;
+    }
+
+    /* Form */
+    .res-form {
+      background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius); padding: 2rem;
+    }
+    .res-form h3 {
+      font-family: var(--f-display); font-size: 1.45rem;
+      color: var(--crema); margin-bottom: 1.5rem;
+    }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label {
+      display: block; font-size: .76rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .08em;
+      color: var(--amarillo); margin-bottom: .4rem;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%; background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.18); border-radius: 9px;
+      padding: .75rem 1rem; color: var(--blanco);
+      font-family: var(--f-body); font-size: .95rem;
+      transition: border-color var(--ease);
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: rgba(255,255,255,.32); }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none; border-color: var(--amarillo);
+      background: rgba(255,255,255,.12);
+    }
+    .form-group select option { background: var(--negro); color: var(--blanco); }
+    .form-group textarea { resize: vertical; min-height: 95px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+    .btn-submit {
+      width: 100%; background: var(--rojo); color: #fff;
+      border: none; padding: 1rem; border-radius: 50px;
+      font-weight: 700; font-size: .98rem;
+      text-transform: uppercase; letter-spacing: .08em;
+      cursor: pointer; transition: all var(--ease); margin-top: .4rem;
+    }
+    .btn-submit:hover {
+      background: var(--amarillo); color: var(--negro);
+      transform: translateY(-2px); box-shadow: var(--sh-md);
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       RESEÑAS
+    ═══════════════════════════════════════════════════════════ */
+    #resenas { background: var(--rojo); color: #fff; position: relative; overflow: hidden; }
+    #resenas::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background-image: var(--tex-svg);
+      background-repeat: repeat; background-size: 100px 50px;
+      opacity: .18; filter: brightness(2);
+    }
+    #resenas .sec-label { color: rgba(245,230,200,.8); justify-content: center; }
+    #resenas .sec-label::before, #resenas .sec-label::after { background: rgba(245,230,200,.4); }
+    #resenas .sec-title { color: #fff; text-align: center; }
+
+    .rating-hero {
+      display: flex; align-items: center; justify-content: center;
+      gap: .6rem; font-size: 1.2rem; font-weight: 700;
+      color: var(--amarillo); margin: .5rem 0 2.8rem; text-align: center;
+    }
+    .rating-hero span { color: rgba(255,255,255,.78); font-size: .9rem; font-weight: 400; }
+
+    .resenas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 1.5rem; margin-bottom: 3rem;
+      position: relative; z-index: 1;
+    }
+    .resena-card {
+      background: rgba(255,255,255,.11); border: 1px solid rgba(255,255,255,.16);
+      border-radius: var(--radius); padding: 1.5rem;
+      backdrop-filter: blur(6px); transition: transform var(--ease);
+    }
+    .resena-card:hover { transform: translateY(-4px); background: rgba(255,255,255,.16); }
+    .r-stars { color: var(--amarillo); font-size: .95rem; margin-bottom: .7rem; }
+    .r-text {
+      font-size: .94rem; line-height: 1.65; font-style: italic;
+      color: rgba(255,255,255,.88); margin-bottom: 1rem;
+    }
+    .r-author { font-weight: 700; font-size: .88rem; color: var(--amarillo); }
+    .r-date { font-size: .78rem; opacity: .65; margin-top: .15rem; }
+
+    .resenas-quote {
+      text-align: center; padding: 2.2rem 1.5rem;
+      border-top: 1px solid rgba(255,255,255,.2);
+      border-bottom: 1px solid rgba(255,255,255,.2);
+      margin: 0 0 2.5rem; position: relative; z-index: 1;
+    }
+    .resenas-quote blockquote {
+      font-family: var(--f-display);
+      font-size: clamp(1.25rem, 3vw, 1.9rem);
+      font-style: italic; line-height: 1.4;
+      color: var(--crema); margin-bottom: .75rem;
+    }
+    .resenas-quote cite {
+      font-size: .9rem; color: var(--amarillo);
+      font-style: normal; font-weight: 700;
+    }
+
+    .platforms {
+      display: flex; flex-wrap: wrap; gap: .75rem;
+      justify-content: center; position: relative; z-index: 1;
+    }
+    .plat-chip {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 50px; padding: .42rem 1.1rem;
+      font-size: .84rem; font-weight: 700; color: #fff;
+      transition: background var(--ease);
+    }
+    .plat-chip:hover { background: rgba(255,255,255,.22); }
+
+    /* ═══════════════════════════════════════════════════════════
+       CÓMO LLEGAR
+    ═══════════════════════════════════════════════════════════ */
+    #llegar { background: var(--crema); }
+    #llegar .sec-label { justify-content: center; color: var(--marron); }
+    #llegar .sec-title { text-align: center; color: var(--negro); }
+
+    .llegar-grid { display: grid; gap: 3rem; margin-top: 2.5rem; }
+    @media (min-width: 768px) {
+      .llegar-grid { grid-template-columns: 1.1fr 1fr; }
+    }
+    .map-wrap {
+      border-radius: var(--radius); overflow: hidden;
+      box-shadow: var(--sh-lg); aspect-ratio: 4/3;
+    }
+    .map-wrap iframe { width: 100%; height: 100%; border: none; }
+
+    .llegar-info h3 {
+      font-family: var(--f-display); font-size: 1.25rem;
+      color: var(--marron); margin-bottom: 1.4rem;
+    }
+    .transport-item {
+      display: flex; align-items: flex-start; gap: .8rem;
+      padding: .75rem 0; border-bottom: 1px solid rgba(123,74,30,.18);
+    }
+    .transport-item:last-child { border-bottom: none; }
+    .t-icon { font-size: 1.3rem; flex-shrink: 0; }
+    .t-text strong { display: block; font-weight: 700; color: var(--negro); margin-bottom: .15rem; }
+    .t-text span { font-size: .85rem; color: #5a4033; }
+
+    .llegar-horarios {
+      background: #fff; border-radius: var(--radius);
+      padding: 1.3rem; box-shadow: var(--sh-sm); margin: 1.5rem 0;
+    }
+    .llegar-horarios h4 {
+      font-family: var(--f-display); font-size: 1rem;
+      color: var(--rojo); margin-bottom: .95rem;
+      display: flex; align-items: center; gap: .4rem;
+    }
+    .h-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: .48rem 0; border-bottom: 1px dashed rgba(0,0,0,.09);
+      font-size: .89rem;
+    }
+    .h-item:last-child { border-bottom: none; }
+    .h-item .dia { color: #5a5040; }
+    .h-item .hora { font-weight: 700; color: var(--negro); }
+
+    .llegar-contact { display: flex; flex-direction: column; gap: .55rem; }
+    .llegar-contact a {
+      display: flex; align-items: center; gap: .55rem;
+      color: var(--marron); font-weight: 700; font-size: .95rem;
+      transition: color var(--ease);
+    }
+    .llegar-contact a:hover { color: var(--rojo); }
+
+    /* ═══════════════════════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════════════════════ */
+    #footer {
+      background: var(--negro); color: rgba(255,255,255,.65);
+      padding: 3.5rem 0 1.5rem;
+    }
+    .footer-grid { display: grid; gap: 2.5rem; margin-bottom: 2.8rem; }
+    @media (min-width: 768px) {
+      .footer-grid { grid-template-columns: 2fr 1fr 1fr; }
+    }
+    .footer-logo {
+      font-family: var(--f-accent); font-size: 2.6rem;
+      color: var(--rojo); margin-bottom: .7rem; display: block;
+    }
+    .footer-brand p { font-size: .88rem; line-height: 1.75; max-width: 290px; }
+
+    .social-row { display: flex; gap: .7rem; margin-top: 1.2rem; }
+    .soc-link {
+      width: 38px; height: 38px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,.08); color: #fff;
+      font-size: .9rem; transition: all var(--ease);
+    }
+    .soc-link:hover { background: var(--rojo); transform: translateY(-2px); }
+    .soc-link svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+    .footer-col h4 {
+      font-family: var(--f-display); font-size: 1rem; color: #fff;
+      margin-bottom: 1rem; padding-bottom: .5rem;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+    }
+    .footer-col li { margin-bottom: .55rem; font-size: .88rem; }
+    .footer-col li a:hover { color: var(--amarillo); }
+    .suc-name { color: #fff; font-weight: 700; font-size: .88rem; }
+    .suc-addr { font-size: .8rem; opacity: .65; }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.1);
+      padding-top: 1.4rem; text-align: center;
+      font-size: .82rem; color: rgba(255,255,255,.45);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       NAVBAR
+  ═══════════════════════════════════════════════════════════ -->
+  <nav id="navbar" role="navigation" aria-label="Navegación principal">
+    <div class="nav-inner">
+      <a href="#inicio" class="nav-logo" aria-label="El Antojo – Inicio">El Antojo</a>
+
+      <button class="nav-hamburger" id="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <ul class="nav-links" id="nav-links" role="menubar">
+        <button class="nav-close" id="nav-close" aria-label="Cerrar menú">&#215;</button>
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#menu">Menú</a></li>
+        <li><a href="#historia">Historia</a></li>
+        <li><a href="#resenas">Reseñas</a></li>
+        <li><a href="#llegar">Cómo Llegar</a></li>
+        <li><a href="#reservas">Reservas</a></li>
+        <li>
+          <a href="https://www.instagram.com/el_antojook" target="_blank" rel="noopener noreferrer" class="nav-ig" aria-label="Instagram @el_antojook">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-linecap="round" stroke-width="2"/>
+            </svg>
+            @el_antojook
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         HERO
+    ═══════════════════════════════════════════════════════════ -->
+    <section id="inicio" aria-label="Inicio">
+      <div class="hero-content">
+        <p class="hero-eyebrow">Bodegón Porteño · Villa del Parque · CABA</p>
+
+        <div class="hero-title-row">
+          <h1 class="hero-title">
+            La Mejor<br><span class="hl">Milanesa</span><br>de Buenos Aires
+          </h1>
+          <div class="hero-badge" role="img" aria-label="Premio Mejor Milanesa de Bodegón de Buenos Aires 2017">
+            <span class="badge-emoji">🏆</span>
+            Premio<br>Mejor Bodegón<br>CABA 2017
+          </div>
+        </div>
+
+        <p class="hero-subtitle">Bodegón porteño desde 1998 · Tinogasta 3174, Villa del Parque</p>
+
+        <div class="hero-ctas">
+          <a href="#menu" class="btn btn-primary">Ver el Menú</a>
+          <a href="#reservas" class="btn btn-outline">Reservar Turno</a>
+        </div>
+      </div>
+      <div class="scroll-ind" aria-hidden="true">&#8595;</div>
+    </section>
+
+    <!-- Separador pan rallado -->
+    <div class="tex-sep" aria-hidden="true"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         HISTORIA
+    ═══════════════════════════════════════════════════════════ -->
+    <section id="historia" aria-label="Nuestra historia">
+      <div class="container">
+        <div class="historia-grid">
+
+          <!-- Texto -->
+          <div class="historia-text fi-l">
+            <p class="sec-label left">Nuestra Historia</p>
+            <h2 class="sec-title">De mozo a dueño.<br>De bodegón a emblema porteño.</h2>
+
+            <blockquote class="historia-quote">
+              "En plena crisis, con las llaves en la mano y el piso como cama."
+            </blockquote>
+
+            <p class="historia-body">
+              En 2002, en plena crisis argentina, Christian Franco recibió las llaves del local donde
+              trabajaba como mozo. Dormía en el piso, pedía gaseosas fiadas al kiosco de la esquina,
+              y soñaba con tener su propio restaurante. Con esfuerzo, ingenio y una milanesa como bandera,
+              transformó ese sueño en realidad.
+            </p>
+            <p class="historia-body" style="margin-top:.9rem">
+              Hoy, <strong>El Antojo</strong> sirve más de <strong>10.000 cubiertos por mes</strong>
+              y es sinónimo de la mejor milanesa de Buenos Aires. Un símbolo del barrio de Villa del Parque
+              y de la gastronomía porteña más auténtica.
+            </p>
+
+            <!-- Timeline -->
+            <div class="timeline" role="list">
+              <div class="tl-item" role="listitem">
+                <div class="tl-year">1998</div>
+                <div class="tl-event"><strong>Apertura del local</strong>Primeras mesas en Tinogasta 3174, Villa del Parque.</div>
+              </div>
+              <div class="tl-item" role="listitem">
+                <div class="tl-year">2002</div>
+                <div class="tl-event"><strong>Christian toma las riendas</strong>De mozo a dueño. Empieza la leyenda.</div>
+              </div>
+              <div class="tl-item" role="listitem">
+                <div class="tl-year">2016</div>
+                <div class="tl-event"><strong>Milanesas XL como sello</strong>El reenfoque en la porción gigante que cambió todo.</div>
+              </div>
+              <div class="tl-item" role="listitem">
+                <div class="tl-year">2017</div>
+                <div class="tl-event"><strong>Premio oficial CABA</strong>"La Mejor Milanesa de Bodegón de Buenos Aires".</div>
+              </div>
+              <div class="tl-item" role="listitem">
+                <div class="tl-year">Hoy</div>
+                <div class="tl-event"><strong>+10.000 cubiertos por mes</strong>Tres sucursales. Un solo antojo.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Visual -->
+          <div class="historia-visual fi-r">
+            <div class="historia-img" role="img" aria-label="El Antojo — bodegón porteño">
+              <div class="historia-img-text">El Antojo</div>
+              <p class="historia-img-sub">Desde 1998 · Villa del Parque</p>
+            </div>
+            <div class="historia-award">
+              🏆<br>Mejor<br>Milanesa<br>CABA 2017
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Separador pan rallado -->
+    <div class="tex-sep" aria-hidden="true"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         MENÚ
+    ═══════════════════════════════════════════════════════════ -->
+    <section id="menu" aria-label="La carta">
+      <div class="container">
+        <p class="sec-label fi">La Carta</p>
+        <h2 class="sec-title fi" style="text-align:center">Elegí tu antojo</h2>
+
+        <!-- Tabs de navegación -->
+        <div class="tabs-nav fi" role="tablist" aria-label="Categorías del menú">
+          <button class="tab-btn active" data-tab="milanesas" role="tab" aria-selected="true" aria-controls="milanesas">🥩 Milanesas</button>
+          <button class="tab-btn" data-tab="entradas" role="tab" aria-selected="false" aria-controls="entradas">🦑 Entradas</button>
+          <button class="tab-btn" data-tab="pastas" role="tab" aria-selected="false" aria-controls="pastas">🍝 Pastas</button>
+          <button class="tab-btn" data-tab="principales" role="tab" aria-selected="false" aria-controls="principales">🥩 Principales</button>
+          <button class="tab-btn" data-tab="postres" role="tab" aria-selected="false" aria-controls="postres">🍮 Postres</button>
+        </div>
+
+        <!-- TAB: MILANESAS -->
+        <div class="tab-pane active" id="milanesas" role="tabpanel" aria-label="Milanesas">
+          <div class="menu-xl-note fi">
+            <div class="menu-xl-icon">🥩</div>
+            <div>
+              <h3>Porción XL — La firma del Antojo</h3>
+              <p>Cortada de bola de lomo, apanada artesanalmente. Pensada para compartir entre 2 y 4 personas. La porción más grande de Villa del Parque — y de Buenos Aires.</p>
+              <span class="chip chip-tacc">SIN TACC disponible</span>
+            </div>
+          </div>
+          <div class="menu-grid">
+            <article class="menu-card fi">
+              <div class="menu-card-name">Milanesa Especial</div>
+              <p class="menu-card-desc">La clásica de bola de lomo con guarnición a elección. El punto de partida perfecto.</p>
+            </article>
+            <article class="menu-card fi">
+              <span class="chip chip-dest" style="margin-bottom:.5rem">Infaltable</span>
+              <div class="menu-card-name">De la Casa</div>
+              <p class="menu-card-desc">Con salsa de tomate casera, jamón cocido y queso mozzarella gratinado. El orgullo del Antojo.</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Americana</div>
+              <p class="menu-card-desc">Mozzarella fundida, panceta crocante y aderezo especial de la casa. Directo al corazón.</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Porteña</div>
+              <p class="menu-card-desc">Base napolitana con panceta crocante y huevo frito a la vista. Orgullosamente de acá.</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Calabresa</div>
+              <p class="menu-card-desc">Salsa picante artesanal, longaniza y mozzarella gratinada. Para los que la quieren con carácter.</p>
+            </article>
+            <article class="menu-card fi">
+              <span class="chip chip-dest" style="margin-bottom:.5rem">🌶️ Picante</span>
+              <div class="menu-card-name">Picantojo</div>
+              <p class="menu-card-desc">Nuestra versión extra picante para los valientes. Ají, chimichurri y mucho fuego. ¿Te animás?</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Napolitana</div>
+              <p class="menu-card-desc">La napolitana clásica: salsa de tomate casera y mozzarella gratinada. Simple y perfecta.</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Cuatro Quesos</div>
+              <p class="menu-card-desc">Mozzarella, provolone, brie y parmesano rallado. Un homenaje al queso en toda su gloria.</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Fugazzeta</div>
+              <p class="menu-card-desc">Estilo pizza fugazzeta con cebolla caramelizada y mozzarella. Buenos Aires en un plato.</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Champiñones</div>
+              <p class="menu-card-desc">Salsa cremosa de champiñones al ajo y perejil. Sofisticada sin perder el alma de bodegón.</p>
+            </article>
+          </div>
+          <p class="menu-footer-note">
+            Todas las milanesas se sirven en porción XL. Guarniciones: papas fritas, puré, ensalada, arroz o verduras salteadas.
+          </p>
+        </div>
+
+        <!-- TAB: ENTRADAS -->
+        <div class="tab-pane" id="entradas" role="tabpanel" aria-label="Entradas">
+          <div class="menu-grid">
+            <article class="menu-card fi">
+              <div class="menu-card-name">Rabas a la Romana</div>
+              <p class="menu-card-desc">Calamares frescos rebozados en tempura liviana. Servidos con limón y salsa criolla.</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Provoleta</div>
+              <p class="menu-card-desc">Queso provolone a la plancha con orégano, tomate cherry y aceite de oliva. El clásico porteño.</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Tortilla Española</div>
+              <p class="menu-card-desc">Papa, huevo y cebolla. Casera, jugosa y perfecta para compartir.</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Bastones de Mozzarella</div>
+              <p class="menu-card-desc">Mozzarella empanada con pan rallado casero, servida con salsa marinara y alioli.</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Empanadas (docena)</div>
+              <p class="menu-card-desc">De carne cortada a cuchillo, pollo o humita. Horneadas al momento. Variedad según el día.</p>
+            </article>
+          </div>
+        </div>
+
+        <!-- TAB: PASTAS -->
+        <div class="tab-pane" id="pastas" role="tabpanel" aria-label="Pastas">
+          <div class="menu-grid">
+            <article class="menu-card fi">
+              <span class="chip chip-dest" style="margin-bottom:.5rem">Favorito</span>
+              <div class="menu-card-name">Sorrentinos</div>
+              <p class="menu-card-desc">Rellenos de ricota y espinaca o jamón y queso. Con salsa bolognesa o a la crema. Caseros.</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Ravioles</div>
+              <p class="menu-card-desc">De ricota y verdura, con salsa a elección: tuco, crema, fileto o pesto.</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Canelones</div>
+              <p class="menu-card-desc">Rellenos de carne o espinaca y ricota, gratinados al horno con bechamel y queso.</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Espaguetis</div>
+              <p class="menu-card-desc">Al tuco, a la bolognesa, al pesto o con aceite, ajo y peperoncino. Simples y ricos.</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Ñoquis</div>
+              <p class="menu-card-desc">Los clásicos de papa, con salsa a elección. Todos los días son 29 en El Antojo.</p>
+            </article>
+          </div>
+        </div>
+
+        <!-- TAB: PRINCIPALES -->
+        <div class="tab-pane" id="principales" role="tabpanel" aria-label="Principales">
+          <div class="menu-grid">
+            <article class="menu-card fi">
+              <div class="menu-card-name">Lomo a la Pimienta</div>
+              <p class="menu-card-desc">Lomo de novillo a punto, con salsa de pimienta negra y crema. Servido con guarnición.</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Matambrito a la Pizza</div>
+              <p class="menu-card-desc">Matambre de cerdo tierno, con salsa de tomate y mozzarella gratinada. Clásico de bodegón.</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Filet de Merluza</div>
+              <p class="menu-card-desc">Rebozado o a la plancha, con guarnición a elección y salsa verde o limón.</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Peceto Agridulce</div>
+              <p class="menu-card-desc">Peceto cocido a fuego lento con salsa agridulce de ciruela y jengibre. Tierno y sabroso.</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Entraña</div>
+              <p class="menu-card-desc">Entraña a la plancha, jugosa y en su punto. Con chimichurri casero y papas fritas.</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Mollejas al Verdeo</div>
+              <p class="menu-card-desc">Mollejas de ternera salteadas con cebolla de verdeo, ajo y vino blanco. Suaves y sabrosas.</p>
+            </article>
+          </div>
+        </div>
+
+        <!-- TAB: POSTRES -->
+        <div class="tab-pane" id="postres" role="tabpanel" aria-label="Postres">
+          <div class="menu-grid">
+            <article class="menu-card fi">
+              <span class="chip chip-dest" style="margin-bottom:.5rem">Firma</span>
+              <div class="menu-card-name">Copa El Antojo</div>
+              <p class="menu-card-desc">Helado artesanal + dulce de leche repostero + crema chantilly + nueces + obleas. El cierre perfecto.</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Strudel de Manzana</div>
+              <p class="menu-card-desc">Hojaldre crujiente relleno de manzana caramelizada con canela. Tibio y con crema.</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Cheesecake</div>
+              <p class="menu-card-desc">Base de galleta, queso crema y coulis de frutos rojos. Frío y cremoso.</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Flan Casero</div>
+              <p class="menu-card-desc">El flan de siempre: hecho en casa, con caramelo y crema o dulce de leche a elección.</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Budín de Pan</div>
+              <p class="menu-card-desc">Con salsa de vainilla o dulce de leche. Tibio y esponjoso como el de la abuela.</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Frutillas con Crema</div>
+              <p class="menu-card-desc">Frutillas frescas de temporada con crema chantilly batida en el momento. Liviano y refrescante.</p>
+            </article>
+            <article class="menu-card fi">
+              <div class="menu-card-name">Tiramisú</div>
+              <p class="menu-card-desc">Versión bodegón del clásico italiano: café, mascarpone, cacao y mucho amor. Hecho en el día.</p>
+            </article>
+          </div>
+        </div>
+
+        <p class="menu-footer-note fi">
+          ⚠️ Precios sujetos a variación. Consultá nuestra carta actualizada en el local o por
+          <a href="https://wa.me/5491160538949" target="_blank" rel="noopener" style="color:var(--verde);font-weight:700">WhatsApp</a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         RESERVAS
+    ═══════════════════════════════════════════════════════════ -->
+    <section id="reservas" aria-label="Reservas">
+      <div class="container">
+        <div class="reservas-grid">
+
+          <!-- Info -->
+          <div class="fi-l">
+            <p class="sec-label" style="color:var(--amarillo);justify-content:flex-start">
+              <span>Reservas</span>
+              <span style="flex:1;height:1px;background:var(--amarillo);opacity:.3"></span>
+            </p>
+            <h2 class="sec-title" style="color:var(--blanco)">Reservá tu lugar</h2>
+            <p class="reservas-info" style="color:rgba(245,230,200,.78);margin-bottom:2rem;font-size:.97rem">
+              El Antojo es un bodegón de barrio: la energía, la gente y la mesa compartida son parte de la experiencia.
+            </p>
+
+            <div class="contact-item">
+              <span class="ci-icon">📍</span>
+              <div class="ci-text">
+                <strong>Dirección</strong>
+                <span>Tinogasta 3174, Villa del Parque, CABA</span>
+              </div>
+            </div>
+            <div class="contact-item">
+              <span class="ci-icon">📞</span>
+              <div class="ci-text">
+                <strong>Teléfono</strong>
+                <span><a href="tel:+541145031626" style="color:inherit">+54 11 4503-1626</a></span>
+              </div>
+            </div>
+            <div class="contact-item">
+              <span class="ci-icon">📱</span>
+              <div class="ci-text">
+                <strong>WhatsApp</strong>
+                <span><a href="https://wa.me/5491160538949" target="_blank" rel="noopener" style="color:inherit">11-6053-8949</a></span>
+              </div>
+            </div>
+            <div class="contact-item">
+              <span class="ci-icon">📸</span>
+              <div class="ci-text">
+                <strong>Instagram</strong>
+                <span><a href="https://www.instagram.com/el_antojook" target="_blank" rel="noopener" style="color:var(--amarillo)">@el_antojook</a></span>
+              </div>
+            </div>
+
+            <div class="res-horarios">
+              <h4>🕐 Horarios de atención</h4>
+              <div class="h-row">
+                <span class="dia">Lunes a Viernes</span>
+                <span class="hora">19:30 – 23:30</span>
+              </div>
+              <div class="h-row" style="font-size:.76rem;color:rgba(255,255,255,.5);padding:.2rem 0">
+                <span>Solo cena</span>
+              </div>
+              <div class="h-row">
+                <span class="dia">Sábados y Domingos</span>
+                <span class="hora">12:00 – 15:30</span>
+              </div>
+              <div class="h-row">
+                <span class="dia"></span>
+                <span class="hora">19:30 – 23:30</span>
+              </div>
+            </div>
+
+            <a href="https://wa.me/5491160538949" target="_blank" rel="noopener" class="btn-wa">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                <path d="M12 0C5.373 0 0 5.373 0 12c0 2.117.553 4.106 1.514 5.836L.057 23.887a.5.5 0 0 0 .614.605l6.224-1.634A11.954 11.954 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.956 9.956 0 0 1-5.193-1.456l-.372-.22-3.857 1.013.974-3.766-.242-.389A9.961 9.961 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+              </svg>
+              Consultar por WhatsApp
+            </a>
+          </div>
+
+          <!-- Formulario -->
+          <div class="fi-r">
+            <div class="aviso-reservas">
+              ⚠️ Las mesas se asignan por orden de llegada. Las reservas son únicamente para
+              <strong>mila-tortas de cumpleaños</strong> (grupos de 6 o más personas).
+            </div>
+
+            <div class="res-form">
+              <h3>Envianos tu consulta</h3>
+              <form id="form-reserva" novalidate>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="f-nombre">Nombre</label>
+                    <input type="text" id="f-nombre" name="nombre" placeholder="Tu nombre" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="f-contacto">Teléfono / Email</label>
+                    <input type="text" id="f-contacto" name="contacto" placeholder="Tu contacto" required>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="f-fecha">Fecha preferida</label>
+                    <input type="date" id="f-fecha" name="fecha">
+                  </div>
+                  <div class="form-group">
+                    <label for="f-personas">Cantidad de personas</label>
+                    <select id="f-personas" name="personas">
+                      <option value="">Seleccioná</option>
+                      <option value="6">6 personas</option>
+                      <option value="7">7 personas</option>
+                      <option value="8">8 personas</option>
+                      <option value="10">10 personas</option>
+                      <option value="12">12+ personas</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="f-mensaje">Mensaje</label>
+                  <textarea id="f-mensaje" name="mensaje" placeholder="Contanos qué necesitás (cumpleaños, evento especial, etc.)"></textarea>
+                </div>
+                <button type="submit" class="btn-submit">Enviar Consulta</button>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Separador pan rallado (versión dark) -->
+    <div class="tex-sep inv" aria-hidden="true"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         RESEÑAS
+    ═══════════════════════════════════════════════════════════ -->
+    <section id="resenas" aria-label="Reseñas y opiniones">
+      <div class="container">
+        <p class="sec-label fi">Lo que dice la gente</p>
+        <h2 class="sec-title fi">El Antojo no falla.</h2>
+        <div class="rating-hero fi">
+          ⭐ 4.4
+          <span>· +20.000 reseñas en Google</span>
+        </div>
+
+        <!-- Cards de reseñas -->
+        <div class="resenas-grid">
+          <article class="resena-card fi">
+            <div class="r-stars">★★★★★</div>
+            <p class="r-text">
+              "La milanesa más grande que probé en mi vida, y encima la más rica. La pedimos entre tres y casi no pudimos terminarla. Volvimos a la semana siguiente. Hay cosas que no se discuten."
+            </p>
+            <div class="r-author">Valentina C.</div>
+            <div class="r-date">Google Reviews · diciembre 2024</div>
+          </article>
+          <article class="resena-card fi">
+            <div class="r-stars">★★★★★</div>
+            <p class="r-text">
+              "El ambiente es exactamente el de un bodegón porteño de toda la vida: mozo atento, mesas juntas, vino de la jarra y una milanesa que te deja sin palabras. El premio 2017 no fue suerte."
+            </p>
+            <div class="r-author">Marcos T.</div>
+            <div class="r-date">TripAdvisor · octubre 2024</div>
+          </article>
+          <article class="resena-card fi">
+            <div class="r-stars">★★★★★</div>
+            <p class="r-text">
+              "Fui con mis viejos de visita desde Córdoba y fue lo primero que pedimos. La milanesa XL de la casa es un monumento. Los postres también son una locura. Ya reservé para la próxima visita."
+            </p>
+            <div class="r-author">Luciana M.</div>
+            <div class="r-date">Google Reviews · enero 2025</div>
+          </article>
+        </div>
+
+        <!-- Quote de Christian Franco -->
+        <div class="resenas-quote fi">
+          <blockquote>
+            "No vendemos comida. Vendemos el antojo de volver."
+          </blockquote>
+          <cite>— Christian Franco, fundador de El Antojo</cite>
+        </div>
+
+        <!-- Plataformas -->
+        <div class="platforms fi">
+          <span class="plat-chip">⭐ Google</span>
+          <span class="plat-chip">🧭 TripAdvisor</span>
+          <span class="plat-chip">🛵 Rappi</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Separador pan rallado -->
+    <div class="tex-sep red" aria-hidden="true"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         CÓMO LLEGAR
+    ═══════════════════════════════════════════════════════════ -->
+    <section id="llegar" aria-label="Cómo llegar">
+      <div class="container">
+        <p class="sec-label fi">Encontranos</p>
+        <h2 class="sec-title fi">Cómo Llegar</h2>
+        <p class="fi" style="text-align:center;color:#5a4033;margin-bottom:0;font-size:.97rem">
+          Tinogasta 3174, Villa del Parque, Ciudad Autónoma de Buenos Aires
+        </p>
+
+        <div class="llegar-grid">
+
+          <!-- Mapa -->
+          <div class="map-wrap fi-l">
+            <iframe
+              title="Mapa El Antojo — Tinogasta 3174, Villa del Parque"
+              src="https://maps.google.com/maps?q=Tinogasta+3174+Villa+del+Parque+Buenos+Aires+Argentina&output=embed&z=16"
+              loading="lazy"
+              allowfullscreen
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+          </div>
+
+          <!-- Info de transporte y horarios -->
+          <div class="fi-r">
+            <h3>Cómo llegar</h3>
+
+            <div class="transport-item">
+              <span class="t-icon">🚂</span>
+              <div class="t-text">
+                <strong>Tren San Martín</strong>
+                <span>Estación Villa del Parque — a solo 140 metros del local</span>
+              </div>
+            </div>
+            <div class="transport-item">
+              <span class="t-icon">🚌</span>
+              <div class="t-text">
+                <strong>Colectivos</strong>
+                <span>Líneas 47 · 78 · 80 · 85 · 108 · 113 · 114 · 133 · 134</span>
+              </div>
+            </div>
+            <div class="transport-item">
+              <span class="t-icon">🚗</span>
+              <div class="t-text">
+                <strong>En auto</strong>
+                <span>Estacionamiento en la zona. Av. Francisco Beiró a 3 cuadras.</span>
+              </div>
+            </div>
+
+            <div class="llegar-horarios">
+              <h4>🕐 Horarios</h4>
+              <div class="h-item">
+                <span class="dia">Lunes a Viernes</span>
+                <span class="hora">19:30 – 23:30 hs</span>
+              </div>
+              <div class="h-item" style="font-size:.78rem;color:#888;padding:.15rem 0">
+                <span>Solo cena</span>
+              </div>
+              <div class="h-item">
+                <span class="dia">Sábados y Domingos</span>
+                <span class="hora">12:00 – 15:30 hs</span>
+              </div>
+              <div class="h-item">
+                <span class="dia"></span>
+                <span class="hora">19:30 – 23:30 hs</span>
+              </div>
+            </div>
+
+            <div class="llegar-contact">
+              <a href="tel:+541145031626">
+                <span>📞</span> +54 11 4503-1626
+              </a>
+              <a href="https://wa.me/5491160538949" target="_blank" rel="noopener">
+                <span>📱</span> WhatsApp: 11-6053-8949
+              </a>
+              <a href="https://www.instagram.com/el_antojook" target="_blank" rel="noopener">
+                <span>📸</span> @el_antojook
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════════════════════ -->
+  <footer id="footer" aria-label="Pie de página">
+    <div class="container">
+      <div class="footer-grid">
+
+        <!-- Brand -->
+        <div class="footer-brand">
+          <span class="footer-logo">El Antojo</span>
+          <p>
+            Bodegón porteño desde 1998. La mejor milanesa de Buenos Aires, nacida en Villa del Parque
+            y reconocida por el Premio Oficial CABA 2017.
+          </p>
+          <div class="social-row">
+            <!-- Instagram -->
+            <a href="https://www.instagram.com/el_antojook" target="_blank" rel="noopener" class="soc-link" aria-label="Instagram">
+              <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-width="2"/></svg>
+            </a>
+            <!-- Facebook -->
+            <a href="https://www.facebook.com/elantojook" target="_blank" rel="noopener" class="soc-link" aria-label="Facebook">
+              <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <!-- TikTok -->
+            <a href="https://www.tiktok.com/@el_antojook" target="_blank" rel="noopener" class="soc-link" aria-label="TikTok">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.24 8.24 0 004.84 1.56V6.81a4.85 4.85 0 01-1.07-.12z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Links -->
+        <div class="footer-col">
+          <h4>El local</h4>
+          <ul>
+            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="#historia">Historia</a></li>
+            <li><a href="#menu">Menú</a></li>
+            <li><a href="#resenas">Reseñas</a></li>
+            <li><a href="#llegar">Cómo Llegar</a></li>
+            <li><a href="#reservas">Reservas</a></li>
+          </ul>
+        </div>
+
+        <!-- Sucursales -->
+        <div class="footer-col">
+          <h4>Sucursales</h4>
+          <ul>
+            <li>
+              <span class="suc-name">Villa del Parque</span>
+              <span class="suc-addr">Tinogasta 3174 — Casa Central</span>
+            </li>
+            <li style="margin-top:.6rem">
+              <span class="suc-name">Núñez</span>
+              <span class="suc-addr">Manuel Ugarte 1699</span>
+            </li>
+            <li style="margin-top:.6rem">
+              <span class="suc-name">Caballito</span>
+              <span class="suc-addr">Pedro Goyena 583 — Take Away</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        © 2025 El Antojo · La Mejor Milanesa de Buenos Aires · Hecho con 🧡 en Villa del Parque
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       JAVASCRIPT
+  ═══════════════════════════════════════════════════════════ -->
+  <script>
+    'use strict';
+
+    /* ── Navbar: scroll → fondo sólido ── */
+    const navbar = document.getElementById('navbar');
+    function onScroll() {
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    /* ── Hamburger (mobile) ── */
+    const navLinks  = document.getElementById('nav-links');
+    const navToggle = document.getElementById('nav-toggle');
+    const navClose  = document.getElementById('nav-close');
+
+    function openNav() {
+      navLinks.classList.add('open');
+      navToggle.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeNav() {
+      navLinks.classList.remove('open');
+      navToggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
+    navToggle.addEventListener('click', openNav);
+    navClose.addEventListener('click', closeNav);
+
+    navLinks.querySelectorAll('a').forEach(a =>
+      a.addEventListener('click', closeNav)
+    );
+
+    /* ── Tabs del menú ── */
+    const tabBtns    = document.querySelectorAll('.tab-btn');
+    const tabPanes   = document.querySelectorAll('.tab-pane');
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.tab;
+
+        tabBtns.forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-selected', 'false');
+        });
+        tabPanes.forEach(p => p.classList.remove('active'));
+
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected', 'true');
+        const pane = document.getElementById(target);
+        if (pane) pane.classList.add('active');
+      });
+    });
+
+    /* ── Fade-in por scroll (IntersectionObserver) ── */
+    const fadeSelectors = '.fi, .fi-l, .fi-r';
+    const fadeEls = document.querySelectorAll(fadeSelectors);
+
+    if ('IntersectionObserver' in window) {
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('on');
+            obs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      fadeEls.forEach(el => obs.observe(el));
+    } else {
+      fadeEls.forEach(el => el.classList.add('on'));
+    }
+
+    /* ── Formulario de reservas ── */
+    const form = document.getElementById('form-reserva');
+    if (form) {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const nombre   = form.querySelector('#f-nombre').value.trim();
+        const contacto = form.querySelector('#f-contacto').value.trim();
+        if (!nombre || !contacto) {
+          alert('Por favor completá al menos tu nombre y contacto.');
+          return;
+        }
+        const fecha    = form.querySelector('#f-fecha').value;
+        const personas = form.querySelector('#f-personas').value;
+        const mensaje  = form.querySelector('#f-mensaje').value.trim();
+
+        const texto = encodeURIComponent(
+          `Hola! Me contacto desde la web de El Antojo.\n` +
+          `Nombre: ${nombre}\n` +
+          `Contacto: ${contacto}\n` +
+          (fecha    ? `Fecha preferida: ${fecha}\n`    : '') +
+          (personas ? `Personas: ${personas}\n`        : '') +
+          (mensaje  ? `Mensaje: ${mensaje}`            : '')
+        );
+
+        window.open(`https://wa.me/5491160538949?text=${texto}`, '_blank', 'noopener,noreferrer');
+      });
+    }
+  </script>
+
+</body>
+</html>
